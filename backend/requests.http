@@ -1,0 +1,38 @@
+### LOGIN APP
+POST http://localhost:3200/api/login
+Content-Type: application/json
+
+{
+    "cnpj": "08575269000108"
+}
+
+### GET ALL CONTRACTS FROM COMPANY
+GET http://localhost:3200/api/companies/08575269000108/contracts
+
+### GET CONTRACT BY ID
+GET http://localhost:3200/api/contracts/38c95a28-20c6-4044-a62f-7c8b9d33ee01
+
+### SAVE NEW INVOICE
+POST http://localhost:3200/api/contracts/b403cf18-edda-4bb7-80d5-14906e4cec3c/invoices
+Content-Type: application/json
+
+{
+  "invoiceNumber": "NF-003",
+  "issueDate": "2024-02-21",
+  "dueDate": "2024-03-21",
+  "amount": 5000.00,
+  "hasTaxWithholding": true,
+  "taxData": {
+    "issqn": 2.00,
+    "irrf": 1.50,
+    "csll": 1.00,
+    "cofins": 3.00,
+    "inss": 11.00,
+    "pis": 0.65
+  },
+  "hasTechnicalRetention": true,
+  "attachment": {
+    "filename": "invoice-nf001.pdf",
+    "path": "/uploads/invoice-nf001.pdf"
+  }
+}

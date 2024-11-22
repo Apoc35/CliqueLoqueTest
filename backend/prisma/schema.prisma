@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id          String     @id @default(uuid())
+  cnpj        String     @unique
+  name        String
+  tradeName   String
+  contracts   Contract[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Contract {
+  id                     String    @id @default(uuid())
+  contractName           String
+  contractCode           String    @unique
+  technicalRetentionPct  Float
+  company               Company    @relation(fields: [companyId], references: [id])
+  companyId             String
+  invoices              Invoice[]
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+}
+
+model Invoice {
+  id                      String    @id @default(uuid())
+  invoiceNumber           String    @unique
+  issueDate               DateTime
+  dueDate                 DateTime
+  amount                  Float
+  contract                Contract  @relation(fields: [contractId], references: [id])
+  contractId              String
+
+  // Tax Withholding Data
+  hasTaxWithholding       Boolean   @default(false)
+  issqn                   Float?
+  irrf                    Float?
+  csll                    Float?
+  cofins                  Float?
+  inss                    Float?
+  pis                     Float?
+
+  // Technical Retention Data
+  hasTechnicalRetention   Boolean   @default(false)
+  technicalRetentionAmount Float?
+  technicalRetentionPct    Float?
+
+  // Attachment Data
+  attachmentFilename      String?
+  attachmentPath          String?
+
+  createdAt               DateTime   @default(now())
+  updatedAt               DateTime   @updatedAt
+}
