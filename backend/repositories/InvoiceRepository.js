@@ -8,7 +8,6 @@ class InvoiceRepository {
 
   async create(invoiceData) {
     try {
-      // First, get the contract to calculate technical retention if needed
       const contract = await this.prisma.contract.findUnique({
         where: { id: invoiceData.contractId }
       })
@@ -17,13 +16,12 @@ class InvoiceRepository {
         throw new DomainError('Contract not found')
       }
 
-      // Calculate technical retention amount if enabled
       let technicalRetentionAmount = null
       if (invoiceData.hasTechnicalRetention) {
         technicalRetentionAmount = (invoiceData.amount * contract.technicalRetentionPct) / 100
       }
 
-      // Create the invoice
+      // Create the invoice - ??? maybe not necessary
       const invoice = await this.prisma.invoice.create({
         data: {
           contractId: invoiceData.contractId,

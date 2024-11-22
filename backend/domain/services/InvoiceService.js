@@ -40,7 +40,7 @@ class InvoiceService {
       throw new ValidationError('Amount Required and must be greater than zero')
     }
 
-    // Validate tax data if tax withholding is enabled
+    // Validate tax data if tax withholding is enabled - use this in frontend?
     if (hasTaxWithholding && taxData) {
       this.validateTaxData(taxData)
     }

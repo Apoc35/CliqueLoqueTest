@@ -11,13 +11,12 @@ class CompanyRepository {
       const company = await this.prisma.company.findUnique({
         where: { cnpj },
         include: {
-          contracts: true // Include contracts to check if company has any
+          contracts: true
         }
       })
 
       if (!company) return null
 
-      // Only return company if it has active contracts
       if (!company.contracts || company.contracts.length === 0) {
         return null
       }
