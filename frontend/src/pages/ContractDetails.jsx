@@ -30,7 +30,7 @@ export default function ContractDetails() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* Basic Information Section */}
+        {/* Basic Information */}
         <div className="bg-white p-6 rounded-lg border">
           <h3 className="text-lg font-medium mb-4">Informações Básicas</h3>
           <div className="grid grid-cols-2 gap-4">
@@ -110,7 +110,7 @@ export default function ContractDetails() {
           </div>
         </div>
 
-        {/* Tax Retention Section */}
+        {/* Tax Retention */}
         <div className="bg-white p-6 rounded-lg border">
           <div className="flex items-center mb-4">
             <input
@@ -148,7 +148,7 @@ export default function ContractDetails() {
           )}
         </div>
 
-        {/* Technical Retention Section */}
+        {/* Technical Retention */}
         <div className="bg-white p-6 rounded-lg border">
           <div className="flex items-center mb-4">
             <input

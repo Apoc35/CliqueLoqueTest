@@ -1,7 +1,13 @@
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        projectBackgroundColor: "#eff0e2",
+        SendButtonColor: "#03a64d",
+        CancelButtonColor: "#ffbe00"
+      }
+    },
   },
   plugins: [],
 };

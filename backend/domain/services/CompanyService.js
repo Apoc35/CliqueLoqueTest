@@ -7,6 +7,8 @@ class CompanyService {
     this.companyRepository = companyRepository
   }
 
+
+  // do not create a new company
   async validateAndFindCompany(cnpj) {
     if (!validateCNPJ(cnpj)) {
       throw new ValidationError('Invalid CNPJ')
