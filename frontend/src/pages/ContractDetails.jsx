@@ -23,15 +23,13 @@ export default function ContractDetails() {
 
   const sendData = async (data) => {
     try {
-      // Construct payload minus tax and technical retention
       const payload = {
         invoiceNumber: data.accountNumber,
         issueDate: data.issueDate,
         dueDate: data.dueDate,
-        amount: parseFloat(data.value), // Convert string to float
+        amount: parseFloat(data.value),
       };
 
-      // Send data to the endpoint
       const response = await fetch(
         `http://localhost:3200/api/contracts/${contractId}/invoices`,
         {
