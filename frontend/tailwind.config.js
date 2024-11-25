@@ -5,7 +5,8 @@ export default {
       colors: {
         projectBackgroundColor: "#eff0e2",
         SendButtonColor: "#03a64d",
-        CancelButtonColor: "#ffbe00"
+        CancelButtonColor: "#ffbe00",
+        techRetencialColor: "#2c70b9"
       }
     },
   },
