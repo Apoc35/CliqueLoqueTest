@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/contracts/:id',
+    path: '/contracts/:contractId',
     element: (
       <Layout>
         <ContractDetails />

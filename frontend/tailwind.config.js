@@ -6,7 +6,8 @@ export default {
         projectBackgroundColor: "#eff0e2",
         SendButtonColor: "#03a64d",
         CancelButtonColor: "#ffbe00",
-        techRetencialColor: "#2c70b9"
+        techRetencialColor: "#2c70b9",
+        pdfButtonColor: "#67685a"
       }
     },
   },

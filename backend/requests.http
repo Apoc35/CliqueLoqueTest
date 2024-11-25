@@ -36,3 +36,14 @@ Content-Type: application/json
     "path": "/uploads/invoice-nf001.pdf"
   }
 }
+
+### SAVE NEW INVOICE BASIC
+POST http://localhost:3200/api/contracts/b403cf18-edda-4bb7-80d5-14906e4cec3c/invoices
+Content-Type: application/json
+
+{
+  "invoiceNumber": "NF-007",
+  "issueDate": "2024-02-21",
+  "dueDate": "2024-03-21",
+  "amount": 5000.00
+}

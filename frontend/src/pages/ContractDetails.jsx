@@ -1,7 +1,7 @@
 import {useNavigate } from 'react-router-dom';
 import { useCompany } from '../context/CompanyContext';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 export default function ContractDetails() {
@@ -14,25 +14,46 @@ export default function ContractDetails() {
     formState: { errors },
   } = useForm();
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  const { contractId } = useParams();
+  const contract = companyData.contracts.find(c => c.id === contractId);
 
-  const sendData = (data) => {
-    console.log(data);
-  };
 
   const hasTaxRetention = watch("hasTaxRetention", false);
   const hasTechnicalRetention = watch("hasTechnicalRetention", false);
 
-  const onInputHandler = (event, tax) => {
-    // Removendo caracteres inválidos e limitando o formato
-    const value = event.target.value.replace(/[^0-9.]/g, ""); // Permite apenas números e ponto
-    if (/^\d{0,2}(\.\d{0,2})?$/.test(value)) {
-      setValue(tax, value, { shouldValidate: true });
+  const sendData = async (data) => {
+    try {
+      // Construct payload minus tax and technical retention
+      const payload = {
+        invoiceNumber: data.accountNumber,
+        issueDate: data.issueDate,
+        dueDate: data.dueDate,
+        amount: parseFloat(data.value), // Convert string to float
+      };
+
+      // Send data to the endpoint
+      const response = await fetch(
+        `http://localhost:3200/api/contracts/${contractId}/invoices`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (response.ok) {
+        console.log('Dados enviados com sucesso:', await response.json());
+        alert('Dados enviados com sucesso!');
+        navigate('/');
+      } else {
+        console.error('Falha ao enviar dados:', await response.json());
+      }
+    } catch (error) {
+      console.error('Error sending data:', error);
     }
   };
-
-  console.log({companyData})
-
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">
@@ -68,11 +89,11 @@ export default function ContractDetails() {
 
         <div className="block text-sm mb-4 ">
             <label className="">Código do Contrato:</label>
-            <div className="w-full h-10 p-2 bg-gray-100 border rounded"></div>
+            <div className="w-full h-10 p-2 bg-gray-100 border rounded">{contract ? contract.contractCode : ''}</div>
         </div>
         <div className="block text-sm mb-4">
           <label className="">Titulo do Contrato:</label>
-        <div className="w-full h-10 p-2 bg-gray-100 border rounded">{}</div>
+        <div className="w-full h-10 p-2 bg-gray-100 border rounded">{contract ? contract.contractName : ''}</div>
         </div>
         </div>
 
@@ -136,17 +157,12 @@ export default function ContractDetails() {
               <label className="block text-sm mb-1">{tax}</label>
               <input
                 {...register(tax.toLowerCase(), {
-                  required: hasTaxRetention && `${tax} é obrigatório`,
-                  validate: (value) =>
-                    /^\d{0,2}(\.\d{0,2})?$/.test(value) ||
-                    `${tax} deve ter até 2 inteiros e 2 decimais.`
                 })}
                 type="number"
                 className={`w-full p-2 border rounded ${
                   errors[tax.toLowerCase()] ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={!hasTaxRetention}
-                onInput={(event) => onInputHandler(event, tax.toLowerCase())}
               />
               {errors[tax.toLowerCase()] && (
                 <p className="text-red-500 text-xs mt-1">
@@ -192,17 +208,11 @@ export default function ContractDetails() {
               </div>
 
               <div>
-                <button
-                  type="button"
-                  className="flex items-center px-4 py-2 bg-gray-700 text-white rounded"
-                >
-                  Anexar Nota Fiscal
-                </button>
-                {selectedFile && (
-                  <div className="mt-2 text-sm text-gray-600">
-                    Nota Fiscal Anexada.pdf
-                  </div>
-                )}
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => setSelectedFile(e.target.files[0])}
+                />
               </div>
             </div>
         </div>
