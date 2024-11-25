@@ -1,233 +1,237 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import { useCompany } from '../context/CompanyContext';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import logo from '../assets/logo.png';
 
 export default function ContractDetails() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const { companyData } = useCompany();
   const {
     register,
     handleSubmit,
-    control,
     watch,
     formState: { errors },
   } = useForm();
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const hasTaxRetention = watch('hasTaxRetention');
-  const hasTechnicalRetention = watch('hasTechnicalRetention');
 
-  const onSubmit = (data) => {
+  const sendData = (data) => {
     console.log(data);
   };
 
+  const hasTaxRetention = watch("hasTaxRetention", false);
+  const hasTechnicalRetention = watch("hasTechnicalRetention", false);
+
+  const onInputHandler = (event, tax) => {
+    // Removendo caracteres inválidos e limitando o formato
+    const value = event.target.value.replace(/[^0-9.]/g, ""); // Permite apenas números e ponto
+    if (/^\d{0,2}(\.\d{0,2})?$/.test(value)) {
+      setValue(tax, value, { shouldValidate: true });
+    }
+  };
+
+  console.log({companyData})
+
+
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Contract Details</h2>
+    <div className="max-w-4xl mx-auto p-6 bg-white">
+      {/* Logo and Header */}
+      <img src={logo} alt="CliqueLoque Logo" className="h-20 w-30 bg-blue-900" />
+      <div className="flex justify-center mb-8">
+        <h1 className="text-2xl font-bold ml-4">PAGAMENTO DE FORNECEDOR</h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* Basic Information */}
-        <div className="bg-white p-6 rounded-lg border">
-          <h3 className="text-lg font-medium mb-4">Informações Básicas</h3>
+      <form onSubmit={handleSubmit(sendData)} className="space-y-6">
+        {/* Company Information */}
+        <div className="border border-red-200 rounded-md p-4">
           <div className="grid grid-cols-2 gap-4">
+            <div className="flex">
+              <label className="text-sm font-semibold w-24">Razão Social:</label>
+              <div className="text-sm">{companyData.name}</div>
+            </div>
+            <div className="flex">
+              <label className="text-sm font-semibold w-10">CNPJ:</label>
+              <div className="text-sm">{companyData.cnpj}</div>
+            </div>
+          </div>
+          <div className="flex mt-2">
+            <label className="text-sm font-semibold w-28">Nome Fantasia:</label>
+            <div className="text-sm">{companyData.tradeName}</div>
+          </div>
+        </div>
+
+        {/* Invoice Details */}
+        <h3 className="text-center border border-red-200 rounded mb-4">Dados da Nota Fiscal</h3>
+        <div className="rounded-md border border-red-200 p-4">
+        <div className="grid grid-cols-2 gap-4">
+
+        <div className="block text-sm mb-4 ">
+            <label className="">Código do Contrato:</label>
+            <div className="w-full h-10 p-2 bg-gray-100 border rounded"></div>
+        </div>
+        <div className="block text-sm mb-4">
+          <label className="">Titulo do Contrato:</label>
+        <div className="w-full h-10 p-2 bg-gray-100 border rounded">{}</div>
+        </div>
+        </div>
+
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Número da conta
-              </label>
+              <label className="block text-sm mb-1">Número da Nota</label>
               <input
-                {...register('accountNumber', {
-                  required: 'Campo obrigatório',
-                })}
+                {...register('accountNumber')}
                 type="text"
-                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                className="w-full p-2 border rounded"
               />
-              {errors.accountNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.accountNumber.message}
-                </span>
-              )}
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Data de emissão
-              </label>
+              <label className="block text-sm mb-1">Data de Emissão</label>
+              <div className="relative">
+                <input
+                  {...register('issueDate')}
+                  type="date"
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+            </div>
+            <div>
+            <label className="block text-sm mb-1">Data de Vencimento</label>
+              <div className="relative">
+                <input
+                  {...register('dueDate')}
+                  type="date"
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Valor</label>
               <input
-                {...register('issueDate', { required: 'Campo obrigatório' })}
-                type="date"
-                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                {...register('value')}
+                type="text"
+                defaultValue=""
+                className="w-full p-2 border rounded"
               />
-              {errors.issueDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.issueDate.message}
-                </span>
-              )}
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Data de vencimento
-              </label>
-              <input
-                {...register('dueDate', { required: 'Campo obrigatório' })}
-                type="date"
-                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-              />
-              {errors.dueDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.dueDate.message}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Valor
-              </label>
-              <Controller
-                name="value"
-                control={control}
-                rules={{ required: 'Campo obrigatório' }}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="number"
-                    step="0.01"
-                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                  />
-                )}
-              />
-              {errors.value && (
-                <span className="text-red-500 text-sm">
-                  {errors.value.message}
-                </span>
-              )}
             </div>
           </div>
         </div>
 
         {/* Tax Retention */}
-        <div className="bg-white p-6 rounded-lg border">
+        <div className="border border-red-200 rounded-md p-4">
           <div className="flex items-center mb-4">
             <input
               type="checkbox"
               {...register('hasTaxRetention')}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 border-gray-300 rounded"
             />
-            <label className="ml-2 text-lg font-medium">
-              Retenção de impostos
-            </label>
+            <label className="ml-2">Retenção de Impostos</label>
           </div>
 
-          {hasTaxRetention && (
-            <div className="grid grid-cols-2 gap-4">
-              {['ISSQN', 'IRRF', 'CSLL', 'COFINS', 'INSS', 'PIS'].map((tax) => (
-                <div key={tax}>
-                  <label className="block text-sm font-medium text-gray-700">
-                    {tax}
-                  </label>
-                  <Controller
-                    name={tax.toLowerCase()}
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="number"
-                        step="0.01"
-                        className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                      />
-                    )}
-                  />
-                </div>
-              ))}
+          <div className="grid grid-cols-3 gap-4">
+          {["ISSQN", "IRRF", "CSLL", "COFINS", "INSS", "PIS"].map((tax) => (
+            <div key={tax}>
+              <label className="block text-sm mb-1">{tax}</label>
+              <input
+                {...register(tax.toLowerCase(), {
+                  required: hasTaxRetention && `${tax} é obrigatório`,
+                  validate: (value) =>
+                    /^\d{0,2}(\.\d{0,2})?$/.test(value) ||
+                    `${tax} deve ter até 2 inteiros e 2 decimais.`
+                })}
+                type="number"
+                className={`w-full p-2 border rounded ${
+                  errors[tax.toLowerCase()] ? "border-red-500" : "border-gray-300"
+                }`}
+                disabled={!hasTaxRetention}
+                onInput={(event) => onInputHandler(event, tax.toLowerCase())}
+              />
+              {errors[tax.toLowerCase()] && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors[tax.toLowerCase()].message}
+                </p>
+              )}
             </div>
-          )}
+          ))}
         </div>
+      </div>
 
         {/* Technical Retention */}
-        <div className="bg-white p-6 rounded-lg border">
+        <div className="border border-red-200 rounded-md p-4">
           <div className="flex items-center mb-4">
             <input
               type="checkbox"
               {...register('hasTechnicalRetention')}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 border-gray-300 rounded"
             />
-            <label className="ml-2 text-lg font-medium">Retenção Técnica</label>
+            <label className="ml-2">Retenção Técnica</label>
           </div>
 
-          {hasTechnicalRetention && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Valor
-                  </label>
-                  <Controller
-                    name="technicalValue"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="number"
-                        step="0.01"
-                        className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                      />
-                    )}
+                  <label className="block text-sm mb-1">Valor</label>
+                  <input
+                    type="text"
+                    defaultValue=""
+                    className="w-full p-2 bg-gray-200 border rounded"
+                    disabled={!hasTechnicalRetention}
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Percentual
-                  </label>
-                  <Controller
-                    name="technicalPercentage"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="number"
-                        step="0.01"
-                        className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                      />
-                    )}
+                  <label className="block text-sm mb-1">Percentual</label>
+                  <input
+                    type="text"
+                    defaultValue=""
+                    className="w-full p-2 bg-gray-200 border rounded"
+                    disabled={!hasTechnicalRetention}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Anexar nota fiscal
-                </label>
-                <input
-                  type="file"
-                  accept=".pdf"
-                  onChange={(e) => setSelectedFile(e.target.files[0])}
-                  className="mt-1 block w-full"
-                />
+                <button
+                  type="button"
+                  className="flex items-center px-4 py-2 bg-gray-700 text-white rounded"
+                >
+                  Anexar Nota Fiscal
+                </button>
+                {selectedFile && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    Nota Fiscal Anexada.pdf
+                  </div>
+                )}
               </div>
             </div>
-          )}
         </div>
 
-        <div className="flex justify-between pt-4">
+        {/* Navigation Buttons */}
+        <div className="flex justify-end gap-4 mt-6">
           <button
             type="button"
             onClick={() => navigate('/contracts')}
-            className="rounded-md bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+            className="px-6 py-2 w-64 bg-CancelButtonColor text-white rounded hover:bg-yellow-600"
           >
-            Voltar
+            Anterior
           </button>
           <button
             type="submit"
-            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="px-6 py-2 w-64 bg-SendButtonColor text-white rounded hover:bg-green-700"
           >
-            Salvar
+            Próximo
           </button>
+        </div>
+        <div className="mt-8">
+          <img
+            src={logo}
+            alt="CliqueLoque Logo"
+            className="w-10 h-15 bg-blue-900"
+          />
+          <p className="mt-2 text-xs text-gray-500 text-end">
+            © 2022-2022 Constituindo Patrimônios
+          </p>
         </div>
       </form>
     </div>

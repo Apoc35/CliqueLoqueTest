@@ -51,7 +51,7 @@ export default function Contracts() {
           alt="CliqueLoque Logo"
           className="mb-6 w-20 h-30 bg-blue-900"
         />
-        <h1 className="mb-6 text-2xl font-bold">PAGAMENTO DE FORNECEDOR</h1>
+        <h1 className="mb-6 text-2xl font-bold text-center ">PAGAMENTO DE FORNECEDOR</h1>
       </div>
       <form onSubmit={handleSubmit(handleNext)} className="space-y-6">
         <div className="rounded-lg border border-red-200 p-4 grid grid-cols-2 gap-4">
@@ -80,7 +80,7 @@ export default function Contracts() {
           <div className="overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-200">
+                <tr className="bg-gray-400 text-white">
                   <th className="w-12 p-3"></th>
                   <th className="p-3 text-left">Nome do Contrato</th>
                   <th className="p-3 text-left">Código do Contrato</th>
@@ -92,7 +92,7 @@ export default function Contracts() {
                 {companyData.contracts.map((contract, index) => (
                   <tr
                     key={contract.id}
-                    className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                    className={ index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                   >
                     <td className="p-3 text-center">
                       <Controller
@@ -132,16 +132,16 @@ export default function Contracts() {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-evenly">
+        <div className="mt-6 flex justify-end gap-4">
           <button
             onClick={handlePrevious}
-            className="rounded-md bg-yellow-500 px-8 py-2 font-semibold text-white hover:bg-yellow-600"
+            className="rounded-md w-64 bg-CancelButtonColor px-8 py-2 font-semibold text-white hover:bg-yellow-600"
           >
             Anterior
           </button>
           <button
             type="submit"
-            className="rounded-md bg-green-600 px-8 py-2 font-semibold text-white hover:bg-green-700"
+            className="rounded-md w-64 bg-SendButtonColor px-8 py-2 font-semibold text-white hover:bg-green-700"
           >
             Próximo
           </button>
@@ -153,7 +153,7 @@ export default function Contracts() {
             alt="CliqueLoque Logo"
             className="w-20 h-30 bg-blue-900"
           />
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="mt-2 text-xs text-gray-500 text-end">
             © 2022-2022 Constituindo Patrimônios
           </p>
         </div>

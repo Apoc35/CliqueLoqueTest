@@ -20,6 +20,8 @@ export default function Home() {
     setValue("cnpj", value);
   };
 
+
+  // I should create an external service to use this validation!
   function validateCnpj(cnpj) {
     // Remove any characters that aren't digits
     cnpj = cnpj.replace(/[^\d]/g, '')
